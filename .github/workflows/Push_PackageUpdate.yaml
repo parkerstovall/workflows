@@ -39,6 +39,7 @@ jobs:
         with:
           repository: ${{ inputs.repo }}
           token: ${{ secrets.repo_token }}
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
