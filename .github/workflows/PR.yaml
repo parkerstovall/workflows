@@ -1,0 +1,16 @@
+name: 'Pull Request'
+description: 'Validate yaml files using actionlint'
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**.{yaml,yml}'
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v1
