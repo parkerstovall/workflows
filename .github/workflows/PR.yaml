@@ -1,5 +1,5 @@
 name: 'Pull Request'
-description: 'Validate all yaml files using actionlint'
+# Validate all yaml files using actionlint
 
 on:
   pull_request:
