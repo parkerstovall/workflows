@@ -31,7 +31,7 @@ jobs:
       contents: write
     
     env:
-      commit_message: "chore(${{ inputs.package_name }}): update package to latest version [skip ci]"
+      commit_message: "chore(${{ inputs.package_name }}): update package to latest version"
 
     runs-on: ubuntu-latest
     steps:
