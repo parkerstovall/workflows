@@ -26,7 +26,7 @@ jobs:
 
     outputs:
       published_version: ${{ steps.pkg.outputs.version }}
-      created_tag: ${{ !steps.check_tag.outputs.exists }}
+      created_tag: ${{ steps.check_tag.outputs.exists == 'false' }}
     
     permissions:
       contents: write
