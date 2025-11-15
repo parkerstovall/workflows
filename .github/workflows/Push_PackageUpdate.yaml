@@ -1,5 +1,5 @@
 name: 'Push Package Update'
-description: 'Updates the package version and pushes changes to the specified repository.'
+# Updates the package version and pushes changes to the specified repository.
 
 on:
   workflow_call:
@@ -52,13 +52,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ${{ inputs.package_directory }}
+          cd "${{ inputs.package_directory }}"
           npm ci
 
       - name: Update package and bump version
         run: |
-          cd ${{ inputs.package_directory }}
-          npm update ${{ inputs.package_name }}
+          cd "${{ inputs.package_directory }}"
+          npm update "${{ inputs.package_name }}"
           npm version patch -m "${{ env.commit_message }}" --no-git-tag-version
 
       - name: Commit and push changes directly
@@ -70,7 +70,7 @@ jobs:
 
       - name: Create Pull Request
         if: ${{ inputs.create_pr }}
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ inputs.repo_token }}
           branch: update-${{ inputs.package_name }}-package

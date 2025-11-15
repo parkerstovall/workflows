@@ -1,10 +1,11 @@
 name: 'Pull Request'
-description: 'Validate yaml files using actionlint'
+# Validate all yaml files using actionlint
 
 on:
   pull_request:
     paths:
-      - '.github/workflows/**.{yaml,yml}'
+      - '.github/workflows/**.yaml'
+      - '.github/workflows/**.yml'
 
 jobs:
   actionlint:

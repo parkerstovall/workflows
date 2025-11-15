@@ -1,5 +1,5 @@
 name: 'Publish Package to NPM'
-description: 'Publishes the package to NPM registry and creates a GitHub release. Only triggers if the version tag does not already exist.'
+# Publishes the package to NPM registry and creates a GitHub release. Only triggers if the version tag does not already exist.
 
 on:
   workflow_call:
@@ -30,17 +30,17 @@ jobs:
       - name: Get version from package.json
         id: pkg
         run: |
-          cd ${{ inputs.package_directory }}
-          echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+          cd "${{ inputs.package_directory }}"
+          echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
 
       - name: Check if tag exists
         id: check_tag
         run: |
           if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.pkg.outputs.version }}$"; then
-              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "exists=true" >> "$GITHUB_OUTPUT"
               echo "::notice::Tag v${{ steps.pkg.outputs.version }} already exists. Skipping tag creation and release."
           else
-              echo "exists=false" >> $GITHUB_OUTPUT
+              echo "exists=false" >> "$GITHUB_OUTPUT"
               echo "::notice::Tag v${{ steps.pkg.outputs.version }} does not exist. Proceeding to create tag and release."
           fi
 
@@ -56,7 +56,7 @@ jobs:
         if: steps.check_tag.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.pkg.outputs.version }}
+          tag_name: "v${{ steps.pkg.outputs.version }}"
           name: Release v${{ steps.pkg.outputs.version }}
           draft: false
           prerelease: false
@@ -67,7 +67,7 @@ jobs:
         run: |
           npm ci
 
-          cd ${{ inputs.package_directory }}
+          cd "${{ inputs.package_directory }}"
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
