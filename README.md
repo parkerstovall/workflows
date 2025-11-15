@@ -26,10 +26,9 @@ on:
 jobs:
   publish:
     uses: parkerstovall/workflows/.github/workflows/Publish_NPM.yaml@main
-    secrets:
-      npm_token: ${{ secrets.NPM_TOKEN }}
     with:
       package_directory: '.' # Optional, defaults to root
+      npm_token: ${{ secrets.NPM_TOKEN }}
 ```
 
 **Inputs:**
@@ -132,7 +131,7 @@ on:
 jobs:
   publish:
     uses: parkerstovall/workflows/.github/workflows/Publish_NPM.yaml@main
-    secrets:
+    with:
       npm_token: ${{ secrets.NPM_TOKEN }}
 
   update-app:
