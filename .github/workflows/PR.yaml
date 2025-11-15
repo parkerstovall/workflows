@@ -4,7 +4,8 @@ description: 'Validate all yaml files using actionlint'
 on:
   pull_request:
     paths:
-      - '.github/workflows/**.{yaml,yml}'
+      - '.github/workflows/**.yaml'
+      - '.github/workflows/**.yml'
 
 jobs:
   actionlint:
