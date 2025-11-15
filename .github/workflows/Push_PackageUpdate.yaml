@@ -1,0 +1,79 @@
+name: 'Push Package Update'
+description: 'Updates the package version and pushes changes to the specified repository.'
+
+on:
+  workflow_call:
+    inputs:
+      repo_token:
+        description: 'GitHub repository token with write permissions'
+        required: true
+        type: string
+      repo:
+        description: 'Repo to check out. Format: owner/repo'
+        required: true
+        type: string
+      package_name:
+        description: 'Name of the package to update'
+        required: true
+        type: string
+      package_directory:
+        description: 'Directory of the package to update'
+        type: string
+        default: '.'
+      create_pr:
+        description: 'Whether to create a pull request instead of pushing directly'
+        type: boolean
+        default: false
+
+jobs:
+  push-package-update:
+    permissions:
+      contents: write
+    
+    env:
+      commit_message: "chore(${{ inputs.package_name }}): update package to latest version [skip ci]"
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          token: ${{ inputs.repo_token }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: |
+          cd ${{ inputs.package_directory }}
+          npm ci
+
+      - name: Update package and bump version
+        run: |
+          cd ${{ inputs.package_directory }}
+          npm update ${{ inputs.package_name }}
+          npm version patch -m "${{ env.commit_message }}" --no-git-tag-version
+
+      - name: Commit and push changes directly
+        if: ${{ !inputs.create_pr }}
+        run: |
+          git add .
+          git diff --staged --quiet || git commit -m "${{ env.commit_message }}"
+          git push origin HEAD
+
+      - name: Create Pull Request
+        if: ${{ inputs.create_pr }}
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ inputs.repo_token }}
+          branch: update-${{ inputs.package_name }}-package
+          title: "Update ${{ inputs.package_name }} package to latest version"
+          body: "GitBot PR: ${{ env.commit_message }}"
+          commit-message: "${{ env.commit_message }}"
