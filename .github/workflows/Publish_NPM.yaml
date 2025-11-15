@@ -68,7 +68,7 @@ jobs:
         run: |
           npm ci
 
-          cd ${{ inputs.package_directory }}
+          cd "${{ inputs.package_directory }}"
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
