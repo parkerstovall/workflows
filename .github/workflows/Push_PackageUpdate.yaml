@@ -66,6 +66,7 @@ jobs:
         run: |
           git add .
           git diff --staged --quiet || git commit -m "${{ env.commit_message }}"
+          git remote set-url origin https://x-access-token:${{ secrets.repo_token }}@github.com/${{ inputs.repo }}.git
           git push origin HEAD
 
       - name: Create Pull Request
