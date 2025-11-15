@@ -12,9 +12,21 @@ on:
       npm_token:
         description: 'NPM authentication token'
         required: true
+    outputs:
+      published_version:
+        description: 'The version of the package that was published'
+        value: ${{ jobs.tag-and-release.outputs.published_version }}
+      created_tag:
+        description: 'Indicates whether a new tag was created'
+        value: ${{ jobs.tag-and-release.outputs.created_tag }}
 
 jobs:
+
   tag-and-release:
+
+    outputs:
+      published_version: ${{ steps.pkg.outputs.version }}
+      created_tag: ${{ !steps.check_tag.outputs.exists }}
     
     permissions:
       contents: write
