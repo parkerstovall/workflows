@@ -36,12 +36,13 @@ jobs:
       - name: Check if tag exists
         id: check_tag
         run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.pkg.outputs.version }}$"; then
+          VERSION="${{ steps.pkg.outputs.version }}"
+          if git ls-remote --tags origin | grep -q "refs/tags/v${VERSION}$"; then
               echo "exists=true" >> $GITHUB_OUTPUT
-              echo "::notice::Tag v${{ steps.pkg.outputs.version }} already exists. Skipping tag creation and release."
+              echo "::notice::Tag v${VERSION} already exists. Skipping tag creation and release."
           else
               echo "exists=false" >> $GITHUB_OUTPUT
-              echo "::notice::Tag v${{ steps.pkg.outputs.version }} does not exist. Proceeding to create tag and release."
+              echo "::notice::Tag v${VERSION} does not exist. Proceeding to create tag and release."
           fi
 
       - name: Create tag
