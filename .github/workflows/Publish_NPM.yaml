@@ -4,14 +4,14 @@ name: 'Publish Package to NPM'
 on:
   workflow_call:
     inputs:
-      npm_token:
-        description: 'NPM authentication token'
-        required: true
-        type: string
       package_directory:
         description: 'Directory of the package to publish'
         type: string
         default: '.'
+    secrets:
+      npm_token:
+        description: 'NPM authentication token'
+        required: true
 
 jobs:
   tag-and-release:
