@@ -36,13 +36,13 @@ jobs:
       - name: Check if tag exists
         id: check_tag
         run: |
-          VERSION="${{ steps.pkg.outputs.version }}"
-          if git ls-remote --tags origin | grep -q "refs/tags/v${VERSION}$"; then
+          # shellcheck disable=SC2086
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.pkg.outputs.version }}$"; then
               echo "exists=true" >> $GITHUB_OUTPUT
-              echo "::notice::Tag v${VERSION} already exists. Skipping tag creation and release."
+              echo "::notice::Tag v${{ steps.pkg.outputs.version }} already exists. Skipping tag creation and release."
           else
               echo "exists=false" >> $GITHUB_OUTPUT
-              echo "::notice::Tag v${VERSION} does not exist. Proceeding to create tag and release."
+              echo "::notice::Tag v${{ steps.pkg.outputs.version }} does not exist. Proceeding to create tag and release."
           fi
 
       - name: Create tag
@@ -58,7 +58,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.pkg.outputs.version }}"
-          name: "Release v${{ steps.pkg.outputs.version }}"
+          name: Release v${{ steps.pkg.outputs.version }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -68,7 +68,7 @@ jobs:
         run: |
           npm ci
 
-          cd "${{ inputs.package_directory }}"
+          cd ${{ inputs.package_directory }}
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
