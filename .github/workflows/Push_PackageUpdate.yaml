@@ -59,7 +59,7 @@ jobs:
       - name: Update package and bump version
         run: |
           cd "${{ inputs.package_directory }}"
-          npm update "${{ inputs.package_name }}"
+          npm install ${{ inputs.package_name }}@latest
           npm version patch -m "${{ env.commit_message }}" --no-git-tag-version
 
       - name: Commit and push changes directly
